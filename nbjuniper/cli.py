@@ -57,10 +57,10 @@ def main():
 
     content = [
         "<script type='text/javascript' src='https://code.jquery.com/jquery-3.5.1.min.js'></script>",
-        "<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/juniper.min.js'></script>",
-        "<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/events.js'></script>",
+        "<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/juniper.min.js'></script>",
+        "<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/events.js'></script>",
         "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>"
-        "<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/style.css'></link>",
+        "<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/style.css'></link>",
         "<div class='juniper-notebook'>"
     ]
 
