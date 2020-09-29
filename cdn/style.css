@@ -8,7 +8,7 @@ h1, h2, h3, h4, h5 { font-family: "Comfortaa"; }
 
 code { font-family: "Space Mono"; font-size: 18px; margin-right: 0px !important; }
 
-.notebook { z-index: -3; display: block; margin: 0px auto; width: 80%; max-width: 1200px;}
+.juniper-notebook { z-index: -3; display: block; margin: 0px auto; width: 80%; max-width: 1200px;}
 
 .cursor { border-right: 0.01em solid white; }
 
