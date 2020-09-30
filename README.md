@@ -11,7 +11,7 @@ as a standalone webpage or embedded in another page.
 
 ## Under the hood
 
-`nbjuniper` creates _Juniper_ notebooks- they are *not* quite the same as _Ipython/Jupyter_ notebooks ([what's the difference?](#What-nbuniper-cannot-do)! The html
+`nbjuniper` creates _Juniper_ notebooks- they are *not* quite the same as _Ipython/Jupyter_ notebooks ([what's the difference?](#what-nbuniper-cannot-do)! The html
 file(s) created by `nbjuniper` automatically link your code to a [MyBinder](https://mybinder.org) instance that
 serves as the backend for executing the code.
 
@@ -47,7 +47,7 @@ nbjuniper example_notebook.ipynb --theme monokai
 ```
 
 You can also create your own style and hardcode it in
-(see [Removing the html head](#Removing-the-html-head)).
+(see [Removing the html head](#removing-the-html-head)).
 If you want to share your own cool theme with others, let me know! I'd love to add it.
 
 ### Full control of Juniper settings
