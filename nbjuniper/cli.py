@@ -1,26 +1,55 @@
 #!/usr/bin/env python
 
-"""Converts notebooks to interactive HTML pages with Juniper + Binder.
+"""
+Converts notebooks to interactive HTML pages with Juniper + Binder.
 
 Usage:
-  nbjuniper NOTEBOOK (-f juniper_settings.yaml)
-  nbinteract (-h | --help)
+  nbjuniper TARGET (-f juniper_settings.yaml)
+  nbjuniper (-h | --help)
 
-`nbinteract NOTEBOOK ...` converts notebooks into HTML pages.
+`nbjuniper example_notebook.ipynb ...` converts example_notebook.ipynb into example_notebook.html.
 
 Arguments:
-  NOTEBOOK   IPython notebook to convert.
+  TARGET                     IPython notebook to convert. If TARGET is a directory, nbjuniper will
+                             render all .ipynb files in that directory (non-recursively by default).
 
 Options:
   -h --help                  Show this screen.
   -f FILENAME                yaml file containing specific settings for the Juniper client.
-                             See https://github.com/ines/juniper for all possibilities.
+                             See https://github.com/ines/juniper for all possibilities, and
+                             this project's README.md for an example.
+  -r TARGET                  Recursively render all .ipynb files within TARGET (should be a directory)
+  --no-head                  Skip writing the HTML head to the page.
+  --decapitate               Write the HTML head to a separate file (juniper_head.html).
+  --binderhub                BinderHub instance to which to connect (default is https://mybinder.org)
+  --repo                     Github repository used to build Binder Docker image on the BinderHub
+                             (default is the very minimal ashtonmv/python_binder)
+
+See the README.md for a more complete explanation of nbjuniper options and usage.
 """
 
+import os
 import json
 import yaml
 import sys
 from markdown import markdown
+
+
+def collect_notebooks(directory, recursive=False):
+    notebooks = {}
+    if recursive:
+        for root, dirs, files in os.walk(directory):
+                for name in files:
+                    nb = os.path.join(root, name)
+                    if nb.endswith(".ipynb"):
+                        with open(nb) as f:
+                            notebooks[nb] = json.load(f)
+    else:
+        for nb in [os.path.join(directory, nb) for nb in
+                   os.listdir(directory) if nb.endswith(".ipynb")]:
+            with open(nb) as f:
+                notebooks[nb] = json.load(f)
+    return notebooks
 
 def main():
 
@@ -33,23 +62,33 @@ def main():
         "isolateCells": False
     }
 
-    notebook = None
+    notebooks = {}
     for i, arg in enumerate(sys.argv):
         if i == 1:
-            with open(arg) as f:
-                notebook = json.load(f)
+            if arg.lower() in ["-h", "--help"]:
+                print(__doc__)
+                return
+            else:
+                if os.path.isfile(arg):
+                    with open(arg) as f:
+                        notebooks[arg] = json.load(f)
+                elif os.path.isdir(arg):
+                    recursive = "-r" in sys.argv
+                    notebooks = collect_notebooks(arg, recursive)
+                elif arg.lower() == "-r":
+                    notebooks = collect_notebooks(sys.argv[i+1], recursive=True)
 
-        if arg == "-f":
+        if arg.lower() == "-f":
             with open(sys.argv[i+1]) as f:
                 juniper_settings.update(yaml.safe_load(f))
 
-        if arg == "--binderhub":
+        if arg.lower() == "--binderhub":
             juniper_settings.update({"url": sys.argv[i+1]})
 
-        if arg == "--repo":
+        if arg.lower() == "--repo":
             juniper_settings.update({"repo": sys.argv[i+1]})
 
-    if notebook is None or "cells" not in notebook:
+    if len(notebooks) == 0:
         raise ValueError("Please specify a valid notebook to convert: nbjuniper example_notebook.ipynb")
 
     for k, v in juniper_settings.items():
@@ -71,29 +110,31 @@ def main():
         "</head>",
     ]
 
-    body = ["<body>"]
-    body.append("<div class='juniper-notebook'>")
-    for cell in notebook["cells"]:
-        if cell["cell_type"] == "code":
-            body.append("<pre data-executable>")
-            body.append("".join(cell["source"]))
-            body.append("</pre>")
-        else:
-            body.append(markdown("".join(cell["source"])))
-    body.append("</div>")
-    body.append("</body>")
+    for filename in notebooks:
+        notebook = notebooks[filename]
+        body = ["<body>"]
+        body.append("<div class='juniper-notebook'>")
+        for cell in notebook["cells"]:
+            if cell["cell_type"] == "code":
+                body.append("<pre data-executable>")
+                body.append("".join(cell["source"]))
+                body.append("</pre>")
+            else:
+                body.append(markdown("".join(cell["source"])))
+        body.append("</div>")
+        body.append("</body>")
 
-    if "--no-head" not in sys.argv and "--decapitate" not in sys.argv:
-        with open(sys.argv[1].replace("ipynb", "html"), "w") as o:
-            o.write("\n".join(head))
-            o.write("\n".join(body))
-    else:
-        if "--no-head" not in sys.argv:
-            with open("juniper_head.html", "w") as o:
+        if "--no-head" not in sys.argv and "--decapitate" not in sys.argv:
+            with open(filename.replace("ipynb", "html"), "w") as o:
                 o.write("\n".join(head))
-        with open(sys.argv[1].replace("ipynb", "html"), "w") as o:
-            o.write("\n".join(body))
-   
+                o.write("\n".join(body))
+        else:
+            with open(filename.replace("ipynb", "html"), "w") as o:
+                o.write("\n".join(body))
+
+    if "--no-head" not in sys.argv:
+        with open("juniper_head.html", "w") as o:
+            o.write("\n".join(head))
 
 if __name__ == "__main__":
     main()
