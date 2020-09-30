@@ -11,7 +11,7 @@ as a standalone webpage or embedded in another page.
 
 ## Under the hood
 
-`nbjuniper` creates _Juniper_ notebooks- they are *not* quite the same as _Ipython/Jupyter_ notebooks! The html
+`nbjuniper` creates _Juniper_ notebooks- they are *not* quite the same as _Ipython/Jupyter_ notebooks ([what's the difference?](#What-nbuniper-cannot-do)! The html
 file(s) created by `nbjuniper` automatically link your code to a [MyBinder](https://mybinder.org) instance that
 serves as the backend for executing the code.
 
@@ -84,3 +84,9 @@ This will create two files: the typical example_notebook.html and the severed ju
 can either discard juniper_head.html and write your own html head, or you can embed juniper_head.html at the top
 of your page where you're including the notebooks so that it's only read in once for the whole page. To prevent writing
 the juniper_head.html file at all, replace `--decapitate` with `--no-head`.
+
+### What nbjuniper cannot do
+Anything that requires instantaneous feedback between the page and the MyBinder server, including certain widgets
+and tab autocompletion, won't work. nbjuniper also intentionally doesn't give you a full jupyter "header"- if you
+want the page to look just like a jupyter notebook, there's a good chance you should just be redirecting to
+MyBinder itself.
