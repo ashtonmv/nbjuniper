@@ -1,0 +1,71 @@
+body { font-family: "Helvetica neue"; }
+
+code { font-family: monospace; font-size: 24px; margin-right: 0px !important; }
+
+.juniper-notebook { display: block; margin: 0px auto; padding-top: 50px; width: 80%; max-width: 1200px;}
+
+.cursor { border-right: 0.01em solid black; }
+
+.juniper-button { background: #a86; color: white; padding: 8px 16px 8px 16px; border: none; position: absolute; top: -34px; right: 0px; transition: all 0.15s ease-in-out; }
+
+.juniper-button:hover { cursor: pointer; background: rgb(219, 171, 122); top: -38px; transition: all 0.15s ease-in-out; }
+
+.juniper-button.running { background: #ffe366; color: black; }
+
+.juniper-button.finished { background: #9fe279; color: black; }
+
+.juniper-button.errored { background: #ff4747; color: white; }
+
+.juniper-cell { margin-top: 80px; border: #a86; background: white; color: #a86; }
+
+.juniper-cell pre { overflow-x: scroll; padding: 0px 25px; font-size: 1.4em; line-height: 1.5em; font-family: monospace; letter-spacing: 0.3px; word-spacing: 1px; }
+
+.juniper-input { padding: 20px; overflow-x: scroll; border: 2px solid #a86; }
+
+.juniper-output { background: #a86; color: white; border: 2px solid #a86; border-top: none; height: auto; min-height: 30px; max-height: 500px; overflow: scroll; }
+
+.CodeMirror { padding: 0px !important; }
+
+.CodeMirror-scroll { height: auto; }
+
+.cm-s-neat span.cm-comment {
+    color: #a86;
+}
+.cm-s-neat span.cm-keyword {
+    line-height: 1em;
+    font-weight: bold;
+    color: blue;
+}
+.cm-s-neat span.cm-string {
+    color: #a22;
+}
+.cm-s-neat span.cm-builtin {
+    line-height: 1em;
+    font-weight: bold;
+    color: #077;
+}
+.cm-s-neat span.cm-special {
+    line-height: 1em;
+    font-weight: bold;
+    color: #0aa;
+}
+.cm-s-neat span.cm-variable {
+    color: black;
+}
+.cm-s-neat span.cm-number,
+.cm-s-neat span.cm-atom {
+    color: #3a3;
+}
+.cm-s-neat span.cm-meta {
+    color: #555;
+}
+.cm-s-neat span.cm-link {
+    color: #3a3;
+}
+.cm-s-neat .CodeMirror-activeline-background {
+    background: #e8f2ff;
+}
+.cm-s-neat .CodeMirror-matchingbracket {
+    outline: 1px solid grey;
+    color: black !important;
+}

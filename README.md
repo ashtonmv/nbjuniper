@@ -38,9 +38,17 @@ nbjuniper example_notebook.ipynb --binderhub https://notebooks.gesis.org --repo 
 ### Styling
 The default style of the Juniper notebook is the one I created for [callysto](https://michael-ashton.com/callysto),
 which has more pink and purple than some of you might be ready for. The theme controls the syntax highlighting in
-each cell as well as the cells' general appearance. I plan to add other themes soon, but for now you'll need to
-create your own stylesheet and replace the default one (see [Removing the html head](#Removing-the-html-head)).
-If you want to share your own cool theme, let me know! I'd love to add it.
+each cell as well as the cells' general appearance. 
+
+The easiest way to switch themes is using a bundled theme (one of those listed under cdn/styles):
+
+```sh
+nbjuniper example_notebook.ipynb --theme monokai
+```
+
+You can also create your own style and hardcode it in
+(see [Removing the html head](#Removing-the-html-head)).
+If you want to share your own cool theme with others, let me know! I'd love to add it.
 
 ### Full control of Juniper settings
 For those who are familiar with [Juniper](https://github.com/ines/juniper), (and if you're not check it out! It's awesome)

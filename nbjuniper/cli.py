@@ -21,9 +21,11 @@ Options:
   -r TARGET                  Recursively render all .ipynb files within TARGET (should be a directory)
   --no-head                  Skip writing the HTML head to the page.
   --decapitate               Write the HTML head to a separate file (juniper_head.html).
-  --binderhub                BinderHub instance to which to connect (default is https://mybinder.org)
-  --repo                     Github repository used to build Binder Docker image on the BinderHub
-                             (default is the very minimal ashtonmv/python_binder)
+  --binderhub                BinderHub instance to which to connect (default is https://mybinder.org).
+  --repo                     Github repository used to build Binder Docker image on the BinderHub.
+                             (default is the very minimal ashtonmv/python_binder).
+  --theme                    Supported themes are 'callysto' (default), 'monokai', 'material', and
+                             'neat'.
 
 See the README.md for a more complete explanation of nbjuniper options and usage.
 """
@@ -51,9 +53,10 @@ def collect_notebooks(directory, recursive=False):
                 notebooks[nb] = json.load(f)
     return notebooks
 
+
 def main():
 
-    juniper_settings = {
+    settings = {
         "url": "https://mybinder.org",
         "repo": "ashtonmv/python_binder",
         "theme": "callysto",
@@ -80,24 +83,29 @@ def main():
 
         if arg.lower() == "-f":
             with open(sys.argv[i+1]) as f:
-                juniper_settings.update(yaml.safe_load(f))
+                settings.update(yaml.safe_load(f))
 
-        if arg.lower() == "--binderhub":
-            juniper_settings.update({"url": sys.argv[i+1]})
+        elif arg.lower() == "--binderhub":
+            settings.update({"url": sys.argv[i+1]})
 
-        if arg.lower() == "--repo":
-            juniper_settings.update({"repo": sys.argv[i+1]})
+        elif arg.lower() == "--repo":
+            settings.update({"repo": sys.argv[i+1]})
+
+        elif arg.lower() == "--theme":
+            settings.update({"theme": sys.argv[i+1]})
 
     if len(notebooks) == 0:
         raise ValueError("Please specify a valid notebook to convert: nbjuniper example_notebook.ipynb")
 
-    for k, v in juniper_settings.items():
-        if type(v) != bool:
-            juniper_settings[k] = f"'{v}'"
-        else:
-            juniper_settings[k] = str(v).lower()
+    theme = settings["theme"]
 
-    juniper_json = ", ".join([f"{key}: {value}" for key, value in juniper_settings.items()]) 
+    for k, v in settings.items():
+        if type(v) != bool:
+            settings[k] = f"'{v}'"
+        else:
+            settings[k] = str(v).lower()
+
+    juniper_json = ", ".join([f"{key}: {value}" for key, value in settings.items()]) 
 
     head = [
         "<head>",
@@ -106,7 +114,7 @@ def main():
         "  <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/events.js'></script>",
         "  <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         f"  <script>$(document).ready(function() {{new Juniper({{ {juniper_json} }})}});</script>",
-        "  <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/style.css'></link>",
+        f"  <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/styles/{theme}.css'></link>",
         "</head>",
     ]
 
