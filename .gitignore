@@ -1,0 +1,6 @@
+MANIFEST
+dist/
+juniper_head.html
+example_notebook.html
+nbjuniper/__pycache__/
+pyproject.toml
