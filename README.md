@@ -1,6 +1,8 @@
 # nbjuniper
 Convert Jupyter Notebooks into runnable HTML files with [Juniper](https://github.com/ines/juniper)
 
+<img src="screenshot.png" width="550px"/>
+
 ## Minimal usage
 ```sh
 nbjuniper example_notebook.ipynb
