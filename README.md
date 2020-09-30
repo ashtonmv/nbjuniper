@@ -11,7 +11,7 @@ as a standalone webpage or embedded in another page.
 
 ## Under the hood
 
-`nbjuniper` creates _Juniper_ notebooks- they are *not* quite the same as _Ipython/Jupyter_ notebooks ([what's the difference?](#what-nbuniper-cannot-do)! The html
+`nbjuniper` creates _Juniper_ notebooks- they are *not* quite the same as _Ipython/Jupyter_ notebooks ([what's the difference?](#what-nbjuniper-cannot-do)) The html
 file(s) created by `nbjuniper` automatically link your code to a [MyBinder](https://mybinder.org) instance that
 serves as the backend for executing the code.
 
