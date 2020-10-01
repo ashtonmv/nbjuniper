@@ -32,10 +32,10 @@ To activate Junper for all code cells in documentation that has already been bui
 `jupyter-book build`, use the jupyter-book mode (it is automatically recursive):
 
 ```sh
-nbjuniper documentation_folder -m jupyter-book
+nbjuniper -j documentation_folder
 ```
 
-This command adds an nbjuniper header to each HTML file in your documentation_folder. It will
+This command adds an nbjuniper header to each HTML file in your documentation_folder. It will (should)
 only change the appearance and behavior of code cells.
 
 ## Under the hood

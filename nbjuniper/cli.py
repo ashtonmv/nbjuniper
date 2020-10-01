@@ -15,10 +15,9 @@ Arguments:
 
 Options:
   -h --help                  Show this screen.
-  -m                         Mode. Options are "normal" (default) or "jupyter-book". "jupyter-book"
+  -j                         switch mode from "normal" (default) to "jupyter-book". "jupyter-book"
                              recursively converts a folder full of already-built (by `jupyter-book build`)
-                             html files into juniper-enabled html files. "normal" converts .ipynb files
-                             into juniper-enabled .html files.
+                             html files into juniper-enabled html files.
   -f FILENAME                yaml file containing specific settings for the Juniper client.
                              See https://github.com/ines/juniper for all possibilities, and
                              this project's README.md for an example.
@@ -39,6 +38,32 @@ import json
 import yaml
 import sys
 from markdown import markdown
+
+
+juniper_init = (
+    "<script>function juniperInit() {"
+    + "if (! $('.juniper-cell').length) {"
+    + "for (var i=0; i<$('div.highlight').length; i++) {"
+    + "var codeBlock = $('div.highlight')[i];"
+    + "if ($(codeBlock).parent().parent().hasClass('cell_input')) {"
+    + "var pre = $(codeBlock).find('pre').first();"
+    + "$(pre).attr({'data-executable': true});"
+    + "var copyBtn = $(codeBlock).find('.copybtn').first();"
+    + "$(copyBtn).hide(); } }"
+    + f"$('.cell_output').hide(); new Juniper({{ {juniper_json} }})"
+    + "} };</script>"
+)
+
+juniper_button = (
+    "<script>$(document).ready( function() {"
+    + "var dropdown = $(document).find('.dropdown-buttons').last();"
+    + "$(\"<a class='dropdown-buttons' onclick='juniperInit()'>"
+    + "<button type='button' class='btn btn-secondary topbarbtn' title=''"
+    + "data-toggle='tooltip' data-placement='left'"
+    + "data-original-title='Initialize Juniper'><i class='fas fa-bolt'></i>"
+    + "Juniper</button></a>\").appendTo(dropdown);"
+    + "});</script>"
+)
 
 
 def collect_notebooks(directory, extension, recursive=False):
@@ -68,30 +93,50 @@ def main():
 
     notebooks = {}
 
-    if "-m" in sys.argv and "jupyter-book" in sys.argv:
+    if "-j" in sys.argv or "jupyter-book" in sys.argv:
         mode = "jupyter-book"
     else:
         mode = "normal"
 
     directory = None
+
     if len([arg for arg in sys.argv if os.path.isdir(arg)]) != 0:
         directory = [arg for arg in sys.argv if os.path.isdir(arg)][0]
 
     for i, arg in enumerate(sys.argv):
+
         if i == 1:
+
             if arg.lower() in ["-h", "--help"]:
                 print(__doc__)
                 return
+
             elif mode == "normal":
+                
                 if os.path.isfile(arg):
                     with open(arg) as f:
                         notebooks[arg] = json.load(f)
+
                 elif directory:
                     recursive = "-r" in sys.argv
-                    notebooks = {f: json.load(f) for f in collect_notebooks(directory, extension=".ipynb", recursive=recursive)}
+                    notebooks = {
+                        f: json.load(f) for f in
+                        collect_notebooks(
+                            directory,
+                            extension=".ipynb",
+                            recursive=recursive
+                        )
+                    }
 
             elif mode == "jupyter-book":
-                notebooks = [nb for nb in collect_notebooks(directory, extension=".html", recursive=True) if "cell docutils container" in open(nb).read()]
+                notebooks = [
+                    nb for nb in collect_notebooks(
+                        directory,
+                        extension=".html",
+                        recursive=True
+                    )
+                    if "cell docutils container" in open(nb).read()
+                ]
 
         elif arg.lower() == "-f":
             with open(sys.argv[i+1]) as f:
@@ -107,7 +152,10 @@ def main():
             settings.update({"theme": sys.argv[i+1]})
 
     if len(notebooks) == 0:
-        raise ValueError("Please specify a valid notebook to convert: nbjuniper example_notebook.ipynb")
+        raise ValueError(
+            "Please specify a valid notebook to convert. e.g. "
+            +"nbjuniper example_notebook.ipynb"
+        )
 
     theme = settings["theme"]
 
@@ -120,16 +168,17 @@ def main():
     juniper_json = ", ".join([f"{key}: {value}" for key, value in settings.items()]) 
 
     head = [
-        "    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/juniper.min.js'></script>",
-        "    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/events.js'></script>",
-        "    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-        f"    <script>$(document).ready(function() {{new Juniper({{ {juniper_json} }})}});</script>",
-        "    <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/styles/base.min.css'></link>",
-        f"    <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/styles/{theme}.css'></link>",
+        "<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/juniper.min.js'></script>",
+        "<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/events.js'></script>",
+        "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
+        "<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/styles/base.min.css'></link>",
+        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/styles/{theme}.css'></link>",
     ]
 
     if mode == "normal":
-        head.insert(0, "  <script type='text/javascript' src='https://code.jquery.com/jquery-3.5.1.min.js'></script>")
+        head.insert(0, "<script type='text/javascript' src='https://code.jquery.com/jquery-3.5.1.min.js'></script>")
+        head.insert(4, f"<script>$(document).ready(function() {{new Juniper({{ {juniper_json} }})}});</script>",
+)
         for filename in notebooks:
             notebook = notebooks[filename]
             body = ["<body>"]
@@ -160,9 +209,10 @@ def main():
 
     elif mode == "jupyter-book":
 
-        head.insert(0, "    <!-- begin nbjuniper head -->")
-        head.insert(4, "    <script>$(document).ready(function() { for (var i=0; i<$('div.highlight').length; i++) { var codeBlock = $('div.highlight')[i]; var pre = $(codeBlock).find('pre').first(); $(pre).attr({'data-executable': true}); var copyBtn = $(codeBlock).find('.copybtn').first(); $(copyBtn).hide();} });</script>")
-        head.append("    <!-- end nbjuniper head -->")
+        head.insert(0, "<!-- begin nbjuniper head -->")
+        head.insert(4, juniper_init)
+        head.append(juniper_button)
+        head.append("<!-- end nbjuniper head -->")
 
         for filename in notebooks:
             raw_lines = open(filename).readlines()
@@ -178,6 +228,7 @@ def main():
                         f.write(line)
                     if "end nbjuniper head" in line:
                         write = True
+
 
 if __name__ == "__main__":
     main()
