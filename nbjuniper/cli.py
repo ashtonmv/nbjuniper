@@ -124,7 +124,7 @@ def main():
         "    <script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/events.js'></script>",
         "    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         f"    <script>$(document).ready(function() {{new Juniper({{ {juniper_json} }})}});</script>",
-        "    <link rel='stylesheet' href='/Users/ashton/Software/nbjuniper/cdn/styles/base.min.css'></link>",
+        "    <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/styles/base.min.css'></link>",
         f"    <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/styles/{theme}.css'></link>",
     ]
 
