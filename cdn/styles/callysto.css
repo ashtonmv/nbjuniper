@@ -1,69 +1,8 @@
-@import url('https://fonts.googleapis.com/css?family=Comfortaa&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Zilla+Slab&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Space+Mono&display=swap');
+:root {
+    --main-bg: #625cd6;
+    --hl-bg: #ff61a0;
+    --main-txt: white;
+}
 
-body { font-family: "Zilla Slab"; }
-
-h1, h2, h3, h4, h5 { font-family: "Comfortaa"; }
-
-code { font-family: "Space Mono"; font-size: 18px; margin-right: 0px !important; }
-
-.juniper-notebook { display: block; margin: 0px auto; padding-top: 50px; width: 80%; max-width: 1200px;}
-
-.cursor { border-right: 0.01em solid white; }
-
-.juniper-button { background: #ff61a0; color: white; border-radius: 8px 8px 0px 0px; padding: 8px 16px 8px 16px; border: none; position: absolute; top: -36px; right: 0px; transition: all 0.15s ease-in-out; }
-
-.juniper-button:hover { cursor: pointer; background: #ff4791; top: -40px; transition: all 0.15s ease-in-out; }
-
-.juniper-button.running { background: #ffe366; color: black; }
-
-.juniper-button.finished { background: #9fe279; color: black; }
-
-.juniper-button.errored { background: #ff4747; color: white; }
-
-.juniper-cell { margin-top: 80px; border: #625cd6; border-radius: 10px 0px 10px 10px; background: #625cd6; color: white; }
-
-.juniper-cell pre { overflow-x: scroll; padding: 0px 25px; font-size: 1em; line-height: 1.5em; font-family: "Space Mono"; letter-spacing: 0.3px; word-spacing: 1px; }
-
-.juniper-input { padding: 20px; overflow-x: scroll; }
-
-.juniper-output { background: white; color: #625cd6; border: 2px solid #625cd6; border-top: none; border-radius: 0px 0px 8px 8px; height: auto; min-height: 30px; max-height: 500px; overflow: scroll; }
-
-.CodeMirror { padding: 0px !important; }
-
-.CodeMirror-scroll { height: auto; }
-
-.cm-s-callysto { font-size: 1.2em; line-height: 1.5em; font-family: "Space Mono"; letter-spacing: 0.3px; word-spacing: 1px; background: none; color: white; }
-
-.cm-s-callysto .CodeMirror-lines { padding: 8px 0; }
-
-.cm-s-callysto .CodeMirror-gutters { box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.5); -webkit-box-shadow: 1px 0 2px 0 rgba(0, 0, 0, 0.5); background-color: #625cd6; padding-right: 10px; z-index: 3; border: none; }
-
-.cm-s-callysto div.CodeMirror-cursor { border-left: 1px solid white; }
-
-.cm-s-callysto .CodeMirror-activeline-background { background: #49483E; }
-
-.cm-s-callysto .CodeMirror-selected { background: #8985e0; }
-
-.cm-s-callysto .cm-comment { color: #ffc7dd; }
-
-.cm-s-callysto .cm-string { color: #ffe366; }
-
-.cm-s-callysto .cm-number { color: #ade5ff; }
-
-.cm-s-callysto .cm-atom { color: #7ad5ff; }
-
-.cm-s-callysto .cm-keyword { color: #b0adeb; }
-
-.cm-s-callysto .cm-variable { color: #ff61a0; }
-
-.cm-s-callysto .cm-def { font-style: italic; color: #ade5ff; }
-
-.cm-s-callysto .cm-variable-2 { color: #ff4747; }
-
-.cm-s-callysto .cm-property { color: #ade5ff; }
-
-.cm-s-callysto .cm-operator { color: white; }
-
-.cm-s-callysto .CodeMirror-linenumber { color: #c8c8c8; }
+/* minified syntax css */
+.cm-s-callysto .CodeMirror-gutters{box-shadow:1px 0 2px 0 rgba(0,0,0,.5);-webkit-box-shadow:1px 0 2px 0 rgba(0,0,0,.5);background-color:#625cd6;padding-right:10px;z-index:3;border:none}.cm-s-callysto div.CodeMirror-cursor{border-left:1px solid #fff}.cm-s-callysto .CodeMirror-activeline-background{background:#49483e}.cm-s-callysto .CodeMirror-selected{background:#8985e0}.cm-s-callysto .cm-comment{color:#ffc7dd}.cm-s-callysto .cm-string{color:#ffe366}.cm-s-callysto .cm-number{color:#ade5ff}.cm-s-callysto .cm-atom{color:#7ad5ff}.cm-s-callysto .cm-keyword{color:#b0adeb}.cm-s-callysto .cm-variable{color:#ff61a0}.cm-s-callysto .cm-def{font-style:italic;color:#ade5ff}.cm-s-callysto .cm-variable-2{color:#ff4747}.cm-s-callysto .cm-property{color:#ade5ff}.cm-s-callysto .cm-operator{color:#fff}.cm-s-callysto .CodeMirror-linenumber{color:#c8c8c8}
