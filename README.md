@@ -1,7 +1,9 @@
 # nbjuniper
-Convert Jupyter Notebooks into runnable HTML files with [Juniper](https://github.com/ines/juniper)
+Convert Jupyter Notebooks and Jupyter-book documentation into executable code with [Juniper](https://github.com/ines/juniper) + [Binder](https://mybinder.org)
 
-<img src="screenshot.gif" width="100%"/>
+<p align="center">
+<img src="screenshot.gif"/>
+</p>
 
 ---
 
@@ -22,7 +24,7 @@ To activate Junper for all code cells in documentation that has already been bui
 nbjuniper documentation_folder -m jupyter-book
 ```
 
-This command adds an nbjuniper header to each HTML file in your documentation. It will
+This command adds an nbjuniper header to each HTML file in your documentation_folder. It will
 only change the appearance and behavior of code cells.
 
 ## Under the hood
@@ -52,19 +54,19 @@ nbjuniper example_notebook.ipynb --binderhub https://notebooks.gesis.org --repo 
 ```
 
 ### Styling
-The default style of the Juniper notebook is the one I created for [callysto](https://michael-ashton.com/callysto),
-which has more pink and purple than some of you might be ready for. The theme controls the syntax highlighting in
-each cell as well as the cells' general appearance. 
+The default style used to create Juniper notebooks is [monokai](https://monokai.pro/). The theme controls the syntax
+highlighting in each cell as well as the cells' general appearance.
 
 The easiest way to switch themes is using a bundled theme (one of those listed under cdn/styles):
 
 ```sh
-nbjuniper example_notebook.ipynb --theme monokai
+nbjuniper example_notebook.ipynb --theme material
 ```
 
 You can also create your own style and hardcode it in
-(see [Removing the html head](#removing-the-html-head)).
-If you want to share your own cool theme with others, let me know! I'd love to add it.
+(see [Removing the html head](#removing-the-html-head)). Adding new themes is very easy; see the examples under cdn/styles.
+I am slowly adding more themes that are already available for CodeMirror; if you want to help me or to add your own theme
+to the nbjuniper CDN please just submit a PR!
 
 ### Full control of Juniper settings
 For those who are familiar with [Juniper](https://github.com/ines/juniper), (and if you're not check it out! It's awesome)
