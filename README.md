@@ -7,7 +7,18 @@ Convert Jupyter Notebooks and Jupyter-book documentation into executable code wi
 
 ---
 
-## Standalone usage
+## Installation
+**conda**
+```sh
+conda install -c conda-forge nbjuniper
+```
+
+**pip**
+```sh
+pip install nbjuniper
+```
+
+## Standalone (ipynb -> html) usage
 ```sh
 nbjuniper example_notebook.ipynb
 ```
@@ -15,7 +26,7 @@ nbjuniper example_notebook.ipynb
 The above command will create (or clobber if it exists!) the file example_notebook.html,
 which can be opened as a standalone webpage or embedded in another page. 
 
-## Jupyter-book usage
+## Jupyter-book (html -> html) usage
 
 To activate Junper for all code cells in documentation that has already been built with
 `jupyter-book build`, use the jupyter-book mode (it is automatically recursive):
