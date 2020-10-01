@@ -40,32 +40,6 @@ import sys
 from markdown import markdown
 
 
-juniper_init = (
-    "<script>function juniperInit() {"
-    + "if (! $('.juniper-cell').length) {"
-    + "for (var i=0; i<$('div.highlight').length; i++) {"
-    + "var codeBlock = $('div.highlight')[i];"
-    + "if ($(codeBlock).parent().parent().hasClass('cell_input')) {"
-    + "var pre = $(codeBlock).find('pre').first();"
-    + "$(pre).attr({'data-executable': true});"
-    + "var copyBtn = $(codeBlock).find('.copybtn').first();"
-    + "$(copyBtn).hide(); } }"
-    + f"$('.cell_output').hide(); new Juniper({{ {juniper_json} }})"
-    + "} };</script>"
-)
-
-juniper_button = (
-    "<script>$(document).ready( function() {"
-    + "var dropdown = $(document).find('.dropdown-buttons').last();"
-    + "$(\"<a class='dropdown-buttons' onclick='juniperInit()'>"
-    + "<button type='button' class='btn btn-secondary topbarbtn' title=''"
-    + "data-toggle='tooltip' data-placement='left'"
-    + "data-original-title='Initialize Juniper'><i class='fas fa-bolt'></i>"
-    + "Juniper</button></a>\").appendTo(dropdown);"
-    + "});</script>"
-)
-
-
 def collect_notebooks(directory, extension, recursive=False):
     if recursive:
         paths = []
@@ -166,6 +140,31 @@ def main():
             settings[k] = str(v).lower()
 
     juniper_json = ", ".join([f"{key}: {value}" for key, value in settings.items()]) 
+
+    juniper_init = (
+        "<script>function juniperInit() {"
+        + "if (! $('.juniper-cell').length) {"
+        + "for (var i=0; i<$('div.highlight').length; i++) {"
+        + "var codeBlock = $('div.highlight')[i];"
+        + "if ($(codeBlock).parent().parent().hasClass('cell_input')) {"
+        + "var pre = $(codeBlock).find('pre').first();"
+        + "$(pre).attr({'data-executable': true});"
+        + "var copyBtn = $(codeBlock).find('.copybtn').first();"
+        + "$(copyBtn).hide(); } }"
+        + f"$('.cell_output').hide(); new Juniper({{ {juniper_json} }})"
+        + "} };</script>"
+    )
+
+    juniper_button = (
+        "<script>$(document).ready( function() {"
+        + "var dropdown = $(document).find('.dropdown-buttons').last();"
+        + "$(\"<a class='dropdown-buttons' onclick='juniperInit()'>"
+        + "<button type='button' class='btn btn-secondary topbarbtn' title=''"
+        + "data-toggle='tooltip' data-placement='left'"
+        + "data-original-title='Initialize Juniper'><i class='fas fa-bolt'></i>"
+        + "Juniper</button></a>\").appendTo(dropdown);"
+        + "});</script>"
+    )
 
     head = [
         "<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/juniper.min.js'></script>",
