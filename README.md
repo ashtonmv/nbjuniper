@@ -1,11 +1,9 @@
 # nbjuniper
-Convert Jupyter Notebooks into runnable HTML files with [Juniper](https://github.com/ines/juniper)
+Convert Jupyter Notebooks and Jupyter-book documentation into executable code with [Juniper](https://github.com/ines/juniper) + [Binder](https://mybinder.org)
 
 <p align="center">
 <img src="screenshot.gif"/>
 </p>
-
-Sorry for the blurry gif, but hopefully you get the idea!
 
 ---
 
