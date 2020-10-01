@@ -5,13 +5,25 @@ Convert Jupyter Notebooks into runnable HTML files with [Juniper](https://github
 
 ---
 
-## Minimal usage
+## Standalone usage
 ```sh
 nbjuniper example_notebook.ipynb
 ```
 
-The above command will create (or clobber if it exists!) the file example_notebook.html, which can be opened
-as a standalone webpage or embedded in another page. 
+The above command will create (or clobber if it exists!) the file example_notebook.html,
+which can be opened as a standalone webpage or embedded in another page. 
+
+## Jupyter-book usage
+
+To activate Junper for all code cells in documentation that has already been built with
+`jupyter-book build`, use the jupyter-book mode (it is automatically recursive):
+
+```sh
+nbjuniper documentation_folder -m jupyter-book
+```
+
+This command adds an nbjuniper header to each HTML file in your documentation. It will
+only change the appearance and behavior of code cells.
 
 ## Under the hood
 
