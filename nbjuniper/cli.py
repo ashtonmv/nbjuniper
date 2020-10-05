@@ -153,8 +153,8 @@ def main():
 
     if len(notebooks) == 0:
         raise ValueError(
-            "Please specify a valid notebook to convert. e.g. "
-            +"nbjuniper example_notebook.ipynb"
+            "No convertable notebooks were found at the specified location."
+            + " Please try nbjuniper -h for more information."
         )
 
     theme = settings["theme"]
