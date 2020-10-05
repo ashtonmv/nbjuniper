@@ -3,34 +3,55 @@
 """
 Converts notebooks to interactive HTML pages with Juniper + Binder.
 
-Usage:
-  nbjuniper TARGET (-f juniper_settings.yaml)
-  nbjuniper (-h | --help)
+Standalone usage:
+  nbjuniper TARGET (+ optional flags below)
 
-`nbjuniper example_notebook.ipynb ...` converts example_notebook.ipynb into example_notebook.html.
+  `nbjuniper example_notebook.ipynb` converts example_notebook.ipynb into
+  example_notebook.html.
+
+Jupyter-book usage:
+  nbjuniper -j TARGET (+ optional flags below)
+
+  `nbjuniper -j docs/` recursively adds a "Juniper" button to the dropdown menu
+  of all HTML files under docs/. Clicking the button will convert all code cells
+  to juniper cells.
 
 Arguments:
-  TARGET                     IPython notebook to convert. If TARGET is a directory, nbjuniper will
-                             render all .ipynb files in that directory (non-recursively by default).
+  TARGET                     IPython notebook to convert. If TARGET is a
+                             directory, nbjuniper will render all .ipynb files
+                             in that directory (non-recursively by default).
 
 Options:
   -h --help                  Show this screen.
-  -j                         switch mode from "normal" (default) to "jupyter-book". "jupyter-book"
-                             recursively converts a folder full of already-built (by `jupyter-book build`)
-                             html files into juniper-enabled html files.
-  -f FILENAME                yaml file containing specific settings for the Juniper client.
-                             See https://github.com/ines/juniper for all possibilities, and
-                             this project's README.md for an example.
-  -r TARGET                  Recursively render all .ipynb files within TARGET (should be a directory)
-  --no-head                  Skip writing the HTML head to the page.
-  --decapitate               Write the HTML head to a separate file (juniper_head.html).
-  --binderhub                BinderHub instance to which to connect (default is https://mybinder.org).
-  --repo                     Github repository used to build Binder Docker image on the BinderHub.
-                             (default is the very minimal ashtonmv/python_binder).
-  --theme                    Supported themes are 'callysto' (default), 'monokai', 'material', and
-                             'neat'.
 
-See the README.md for a more complete explanation of nbjuniper options and usage.
+  -j                         switch mode from "normal" (default) to 
+                             "jupyter-book". "jupyter-book" recursively converts
+                             a folder full of already-built (by `jupyter-book
+                             build`) html files into juniper-enabled html files.
+
+  -f FILENAME                yaml file containing specific settings for the
+                             Juniper client. See
+                             https://github.com/ines/juniper for all
+                             possibilities, and this project's README.md for an
+                             example.
+
+  -r TARGET                  Recursively render all .ipynb files within TARGET
+                             (should be a directory)
+
+  --no-head                  Skip writing the HTML head to the page.
+
+  --decapitate               Write the HTML head to a separate file
+                             (juniper_head.html).
+
+  --binderhub BINDERHUB      BinderHub instance to which to connect (default
+                             is https://mybinder.org).
+
+  --repo REPO                Github repository used to build Binder Docker
+                             image on the BinderHub. (default is the very
+                             minimal ashtonmv/python_binder).
+
+  --theme THEME              Default theme is monokai. Must be a theme under
+                             nbjuniper/cdn/styles
 """
 
 import os
@@ -67,8 +88,10 @@ def main():
 
     notebooks = {}
 
+    css_base = "juniperpage"
     if "-j" in sys.argv or "jupyter-book" in sys.argv:
         mode = "jupyter-book"
+        css_base = "juniperbook"
     else:
         mode = "normal"
 
@@ -92,15 +115,18 @@ def main():
                         notebooks[arg] = json.load(f)
 
                 elif directory:
+                    notebooks = {}
                     recursive = "-r" in sys.argv
-                    notebooks = {
-                        f: json.load(f) for f in
-                        collect_notebooks(
-                            directory,
-                            extension=".ipynb",
-                            recursive=recursive
-                        )
-                    }
+
+                    paths = collect_notebooks(
+                        directory,
+                        extension=".ipynb",
+                        recursive=recursive
+                    )
+
+                    for path in paths:
+                        with open(path) as f:
+                            notebooks[path] = json.load(f)
 
             elif mode == "jupyter-book":
                 notebooks = [
@@ -139,7 +165,9 @@ def main():
         else:
             settings[k] = str(v).lower()
 
-    juniper_json = ", ".join([f"{key}: {value}" for key, value in settings.items()]) 
+    juniper_json = ", ".join(
+        [f"{key}: {value}" for key, value in settings.items()]
+    ) 
 
     juniper_init = (
         "<script>function juniperInit() {"
@@ -151,7 +179,9 @@ def main():
         + "$(pre).attr({'data-executable': true});"
         + "var copyBtn = $(codeBlock).find('.copybtn').first();"
         + "$(copyBtn).hide(); } }"
-        + f"$('.cell_output').hide(); new Juniper({{ {juniper_json} }})"
+        + "$('.cell_output').hide();"
+        + f"var j = new Juniper({{ {juniper_json} }});"
+        + "j.getKernel();"
         + "} };</script>"
     )
 
@@ -170,13 +200,13 @@ def main():
         "<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/juniper.min.js'></script>",
         "<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/events.js'></script>",
         "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-        "<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/styles/base.min.css'></link>",
+        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/styles/{css_base}.min.css'></link>",
         f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper/cdn/styles/{theme}.css'></link>",
     ]
 
     if mode == "normal":
         head.insert(0, "<script type='text/javascript' src='https://code.jquery.com/jquery-3.5.1.min.js'></script>")
-        head.insert(4, f"<script>$(document).ready(function() {{new Juniper({{ {juniper_json} }})}});</script>",
+        head.insert(4, f"<script>$(document).ready(function() {{var juniper = new Juniper({{ {juniper_json} }}); juniper.getKernel();}});</script>",
 )
         for filename in notebooks:
             notebook = notebooks[filename]
