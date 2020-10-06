@@ -84,10 +84,10 @@ For those who are familiar with [Juniper](https://github.com/ines/juniper), (and
 you can customize every option used to create the Juniper client like so:
 
 ```sh
-nbjuniper example_notebook.ipynb -f my_juniper_settings.yaml
+nbjuniper example_notebook.ipynb -f example_config.yaml
 ```
 
-where my_juniper_settings.yaml should have the form
+where example_config.yaml should have the same form as the example provided in this repository:
 
 ```yaml
 url: https://binder.michael-ashton.com  # must be a binderhub with CORS enabled
@@ -98,7 +98,8 @@ msgLoading: "Loading..."  # msg to display while loading (doesn't go away if no 
 ...etc
 ```
 
-See the [Juniper documentation](https://github.com/ines/juniper) for a full list of settings.
+See the [Juniper documentation](https://github.com/ines/juniper) for a full list of settings; everthing in this file will be passed
+to the Juniper instance.
 
 ### Removing the html head
 If you're going to embed multiple Juniper notebooks into a single page, you don't want to include the html head in
