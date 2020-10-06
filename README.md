@@ -84,10 +84,10 @@ For those who are familiar with [Juniper](https://github.com/ines/juniper), (and
 you can customize every option used to create the Juniper client like so:
 
 ```sh
-nbjuniper example_notebook.ipynb -f example_juniper_config.yaml
+nbjuniper example_notebook.ipynb -f example_config.yaml
 ```
 
-where example_juniper_config.yaml should have the same form as the example provided in this repository:
+where example_config.yaml should have the same form as the example provided in this repository:
 
 ```yaml
 url: https://binder.michael-ashton.com  # must be a binderhub with CORS enabled
