@@ -9,7 +9,7 @@ function startKernel(juniperInstance) {
 
     for (var i=0; i<$(".juniper-output").length; i++) {
         var output = $(".juniper-output")[i];
-        $(output).text("Connecting to kernel...");
+        $(output).append("<p class='temporaryMsg'>Connecting to kernel...</p>");
     }
 
     if (juniperInstance._kernel && juniperInstance.isolateCells) {
@@ -37,9 +37,9 @@ document.addEventListener('juniper', event => {
             var button = $(".juniper-button")[i];
             $(button).text("run");
         }
-        for (var i=0; i<$(".juniper-output").length; i++) {
-            var output = $(".juniper-output")[i];
-            $(output).text("");
+        for (var i=0; i<$(".temporaryMsg").length; i++) {
+            var output = $(".temporaryMsg")[i];
+            $(output).hide();
         }
     }
 })
@@ -104,13 +104,9 @@ document.addEventListener('juniper', event => {
         if ($(div1).attr("onclick") == "juniperInit()") {
             for (var i=0; i<$(".juniper-button").length; i++) {
                 var button = $(".juniper-button")[i];
-                $(button).text("In []");
+                $(button).text("reload");
                 $(button).removeClass("finished");
                 $(button).addClass("errored");
-            }
-            for (var i=0; i<$(".juniper-output").length; i++) {
-                var output = $(".juniper-output")[i];
-                $(output).text("Connecting failed. Please reload and try again.");
             }
         }
 

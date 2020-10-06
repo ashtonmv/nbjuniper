@@ -61,7 +61,7 @@ import sys
 from markdown import markdown
 
 
-CDN_RELEASE = "0.3"
+CDN_RELEASE = "0.3.1"
 
 
 def collect_notebooks(directory, extension, recursive=False):
