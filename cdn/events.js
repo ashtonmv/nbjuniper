@@ -1,3 +1,42 @@
+// Start the Juniper connection to the Binder kernel
+function startKernel(juniperInstance) {
+    juniperInstance._event('requesting-kernel');
+
+    for (var i=0; i<$(".juniper-button").length; i++) {
+        var button = $(".juniper-button")[i];
+        $(button).text("...");
+        $(button).addClass("running");
+    }
+
+    if (juniperInstance._kernel && juniperInstance.isolateCells) {
+        juniperInstance._kernel.restart();
+    }
+    new Promise((resolve, reject) =>
+    juniperInstance.getKernel().then(resolve).catch(reject))
+    .then(kernel => {
+        juniperInstance._kernel = kernel;
+    })
+    .catch(() => {
+        juniperInstance._event('failed');
+        juniperInstance._kernel = null;
+        if (juniperInstance.useStorage && typeof window !== 'undefined') {
+            juniperInstance._fromStorage = false;
+            window.localStorage.removeItem(juniperInstance.storageKey);
+        }
+    })
+}
+
+// Kernel is ready to go, so make cells executable
+document.addEventListener('juniper', event => {
+    if (event.detail.status == 'ready') {
+        for (var i=0; i<$(".juniper-button").length; i++) {
+            var button = $(".juniper-button")[i];
+            $(button).text("run");
+            $(button).removeClass("running");
+        }
+    }
+})
+
 // Listen for events sent back by the jupyterlab KernelFutureHandler
 // as cellExecuted (the name I gave them in juniper.min.js)
 document.addEventListener("cellExecuted", event => {

@@ -61,7 +61,7 @@ import sys
 from markdown import markdown
 
 
-CDN_RELEASE = "0.2.5"
+CDN_RELEASE = "0.2.7"
 
 
 def collect_notebooks(directory, extension, recursive=False):
@@ -78,8 +78,9 @@ def collect_notebooks(directory, extension, recursive=False):
     return paths
 
 
-def main():
+def get_settings():
 
+    # Defaults
     settings = {
         "url": "https://mybinder.org",
         "repo": "ashtonmv/python_binder",
@@ -89,7 +90,27 @@ def main():
         "isolateCells": False
     }
 
+    for i, arg in enumerate(sys.argv):
+        if arg.lower() == "-f":
+            with open(sys.argv[i+1]) as f:
+                settings.update(yaml.safe_load(f))
+
+        elif arg.lower() == "--binderhub":
+            settings.update({"url": sys.argv[i+1]})
+
+        elif arg.lower() == "--repo":
+            settings.update({"repo": sys.argv[i+1]})
+
+        elif arg.lower() == "--theme":
+            settings.update({"theme": sys.argv[i+1]})
+
+    return settings
+
+
+def main():
+
     notebooks = {}
+    settings = get_settings()
 
     css_base = "juniperpage"
     if "-j" in sys.argv or "jupyter-book" in sys.argv:
@@ -141,19 +162,6 @@ def main():
                     if "cell docutils container" in open(nb).read()
                 ]
 
-        elif arg.lower() == "-f":
-            with open(sys.argv[i+1]) as f:
-                settings.update(yaml.safe_load(f))
-
-        elif arg.lower() == "--binderhub":
-            settings.update({"url": sys.argv[i+1]})
-
-        elif arg.lower() == "--repo":
-            settings.update({"repo": sys.argv[i+1]})
-
-        elif arg.lower() == "--theme":
-            settings.update({"theme": sys.argv[i+1]})
-
     if len(notebooks) == 0:
         raise ValueError(
             "No convertable notebooks were found at the specified location."
@@ -183,8 +191,8 @@ def main():
         + "var copyBtn = $(codeBlock).find('.copybtn').first();"
         + "$(copyBtn).hide(); } }"
         + "$('.cell_output').hide();"
-        + f"var j = new Juniper({{ {juniper_json} }});"
-        + "j.getKernel();"
+        + f"var juniper = new Juniper({{ {juniper_json} }});"
+        + "startKernel(juniper);"
         + "} };</script>"
     )
 
@@ -201,15 +209,15 @@ def main():
 
     head = [
         f"<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/juniper.min.js'></script>",
-        f"<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/events.js'></script>",
+        f"<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/events.min.js'></script>",
         "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/styles/{css_base}.min.css'></link>",
-        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/styles/{theme}.css'></link>",
+        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/styles/{theme}.min.css'></link>",
     ]
 
     if mode == "normal":
         head.insert(0, "<script type='text/javascript' src='https://code.jquery.com/jquery-3.5.1.min.js'></script>")
-        head.insert(4, f"<script>$(document).ready(function() {{var juniper = new Juniper({{ {juniper_json} }}); juniper.getKernel();}});</script>",
+        head.insert(4, f"<script>$(document).ready(function() {{var juniper = new Juniper({{ {juniper_json} }}); startKernel(juniper);}});</script>",
 )
         for filename in notebooks:
             notebook = notebooks[filename]
