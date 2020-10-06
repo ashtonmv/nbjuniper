@@ -4,8 +4,12 @@ function startKernel(juniperInstance) {
 
     for (var i=0; i<$(".juniper-button").length; i++) {
         var button = $(".juniper-button")[i];
-        $(button).text("...");
-        $(button).addClass("running");
+        $(button).html("<div class='spinner'><div class='bounce1'></div><div class='bounce2'></div><div class='bounce3'></div></div>");
+    }
+
+    for (var i=0; i<$(".juniper-output").length; i++) {
+        var output = $(".juniper-output")[i];
+        $(output).text("Connecting to kernel...");
     }
 
     if (juniperInstance._kernel && juniperInstance.isolateCells) {
@@ -32,7 +36,10 @@ document.addEventListener('juniper', event => {
         for (var i=0; i<$(".juniper-button").length; i++) {
             var button = $(".juniper-button")[i];
             $(button).text("run");
-            $(button).removeClass("running");
+        }
+        for (var i=0; i<$(".juniper-output").length; i++) {
+            var output = $(".juniper-output")[i];
+            $(output).text("");
         }
     }
 })
@@ -81,14 +88,9 @@ document.addEventListener('juniper', event => {
 
         $(activeCell).addClass("active");
 
-        // make the output area yellow
+        // Display loading animation
         var activeButton = $(activeCell).find(".juniper-button").first();
-        $(activeButton).removeClass("finished");
-        $(activeButton).removeClass("errored");
-        $(activeButton).addClass("running");
-
-        // Display In[*], like on most jupyter servers
-        $(activeButton).text("In [*]");
+        $(activeButton).html("<div class='spinner'><div class='bounce1'></div><div class='bounce2'></div><div class='bounce3'></div></div>");
     }
 })
 
@@ -97,25 +99,42 @@ document.addEventListener('juniper', event => {
     if (event.detail.status == 'failed') {
         var div1 = $(event.target.activeElement).parent();
 
-        // if the juniper-button was clicked
-        if ($(div1).hasClass("juniper-cell")) {
-            var activeCell = $(div1);
+        // If loading the kernel failed
+        console.log($(div1).attr("onclick"));
+        if ($(div1).attr("onclick") == "juniperInit()") {
+            for (var i=0; i<$(".juniper-button").length; i++) {
+                var button = $(".juniper-button")[i];
+                $(button).text("In []");
+                $(button).removeClass("finished");
+                $(button).addClass("errored");
+            }
+            for (var i=0; i<$(".juniper-output").length; i++) {
+                var output = $(".juniper-output")[i];
+                $(output).text("Connecting failed. Please reload and try again.");
+            }
         }
 
-        // if the cell was run using shift-enter
+        // If execution of a cell failed
         else {
-            var codeMirror = $(div1).parent();
-            var juniperInput = $(codeMirror).parent();
-            var activeCell = $(juniperInput).parent();            
+            // if a juniper-button was clicked
+            if ($(div1).hasClass("juniper-cell")) {
+                var activeCell = $(div1);
+            }
+
+            // if the cell was run using shift-enter
+            else {
+                var codeMirror = $(div1).parent();
+                var juniperInput = $(codeMirror).parent();
+                var activeCell = $(juniperInput).parent();            
+            }
+
+            // make the output area yellow
+            var activeButton = $(activeCell).find(".juniper-button").first();
+            $(activeButton).removeClass("finished");
+            $(activeButton).addClass("errored");
+
+            // Display In[*], like on most jupyter servers
+            $(activeButton).text("In []");
         }
-
-        // make the output area yellow
-        var activeButton = $(activeCell).find(".juniper-button").first();
-        $(activeButton).removeClass("finished");
-        $(activeButton).removeClass("running");
-        $(activeButton).addClass("errored");
-
-        // Display In[*], like on most jupyter servers
-        $(activeButton).text("In []");
     }
 })
