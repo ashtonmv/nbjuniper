@@ -61,6 +61,9 @@ import sys
 from markdown import markdown
 
 
+CDN_RELEASE = "0.2.8"
+
+
 def collect_notebooks(directory, extension, recursive=False):
     if recursive:
         paths = []
@@ -205,11 +208,11 @@ def main():
     )
 
     head = [
-        "<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@latest/cdn/juniper.min.js'></script>",
-        "<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@latest/cdn/events.min.js'></script>",
+        f"<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/juniper.min.js'></script>",
+        f"<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/events.min.js'></script>",
         "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@latest/cdn/styles/{css_base}.min.css'></link>",
-        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@latest/cdn/styles/{theme}.min.css'></link>",
+        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/styles/{css_base}.min.css'></link>",
+        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/styles/{theme}.min.css'></link>",
     ]
 
     if mode == "normal":
