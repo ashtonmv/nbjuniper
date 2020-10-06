@@ -38,7 +38,8 @@ document.addEventListener('juniper', event => {
             $(button).text("run");
         }
         for (var i=0; i<$(".temporaryMsg").length; i++) {
-            $(".temporaryMsg")[i].hide();
+            var msg = $(".temporaryMsg")[i]
+            $(msg).hide();
         }
     }
 })
@@ -96,11 +97,11 @@ document.addEventListener('juniper', event => {
 // Select the actively running juniper cell.
 document.addEventListener('juniper', event => {
     if (event.detail.status == 'failed') {
-        var div1 = $(event.target.activeElement).parent();
 
-        // If loading the kernel failed
-        console.log($(div1).attr("onclick"));
-        if ($(div1).attr("onclick") == "juniperInit()") {
+        var trigger = $(event.target.activeElement);
+
+        // If the initial kernel load failed
+        if ($(trigger).is("body")||$(trigger).attr("click")=="juniperInit()") {
             for (var i=0; i<$(".juniper-button").length; i++) {
                 var button = $(".juniper-button")[i];
                 $(button).text("reload");
@@ -108,20 +109,21 @@ document.addEventListener('juniper', event => {
                 $(button).addClass("errored");
             }
             for (var i=0; i<$(".temporaryMsg").length; i++) {
-                $(".temporaryMsg")[i].hide();
+                var msg = $(".temporaryMsg")[i]
+                $(msg).text("Connecting failed. Please reload and try again.")
             }
         }
 
         // If execution of a cell failed
         else {
             // if a juniper-button was clicked
-            if ($(div1).hasClass("juniper-cell")) {
-                var activeCell = $(div1);
+            if ($(trigger).parent().hasClass("juniper-cell")) {
+                var activeCell = $(trigger).parent();
             }
 
             // if the cell was run using shift-enter
             else {
-                var codeMirror = $(div1).parent();
+                var codeMirror = $(trigger).parent();
                 var juniperInput = $(codeMirror).parent();
                 var activeCell = $(juniperInput).parent();            
             }
@@ -133,6 +135,11 @@ document.addEventListener('juniper', event => {
 
             // Display In[*], like on most jupyter servers
             $(activeButton).text("In []");
+
+            for (var i=0; i<$(".temporaryMsg").length; i++) {
+                var msg = $(".temporaryMsg")[i]
+                $(msg).hide();
+            }
         }
     }
 })

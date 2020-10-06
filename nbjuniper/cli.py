@@ -208,11 +208,11 @@ def main():
     )
 
     head = [
+        "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         f"<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/juniper.min.js'></script>",
         f"<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/events.min.js'></script>",
-        "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
-        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/styles/{css_base}.min.css'></link>",
-        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/styles/{theme}.min.css'></link>",
+        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/base/{css_base}.min.css'></link>",
+        f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/themes/{theme}.min.css'></link>",
     ]
 
     if mode == "normal":
