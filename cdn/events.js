@@ -38,8 +38,7 @@ document.addEventListener('juniper', event => {
             $(button).text("run");
         }
         for (var i=0; i<$(".temporaryMsg").length; i++) {
-            var output = $(".temporaryMsg")[i];
-            $(output).hide();
+            $(".temporaryMsg")[i].hide();
         }
     }
 })
@@ -107,6 +106,9 @@ document.addEventListener('juniper', event => {
                 $(button).text("reload");
                 $(button).removeClass("finished");
                 $(button).addClass("errored");
+            }
+            for (var i=0; i<$(".temporaryMsg").length; i++) {
+                $(".temporaryMsg")[i].hide();
             }
         }
 
