@@ -1,5 +1,8 @@
 # nbjuniper
+
 Convert Jupyter Notebooks and Jupyter-book documentation into executable code with [Juniper](https://github.com/ines/juniper) + [Binder](https://mybinder.org)
+
+[![Build Status](https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nbjuniper-feedstock?branchName=master)](https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nbjuniper-feedstock?branchName=master) [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/nbjuniper.svg)](https://anaconda.org/conda-forge/nbjuniper) [![Conda Version](https://img.shields.io/conda/vn/conda-forge/nbjuniper.svg)](https://anaconda.org/conda-forge/nbjuniper)
 
 <p align="center">
 <img src="screenshot.gif"/>
