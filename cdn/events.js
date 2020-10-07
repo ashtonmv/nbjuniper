@@ -61,9 +61,11 @@ document.addEventListener("cellExecuted", event => {
         // Color the tab based on the response
         if (status == "ok") {
             // make the tab green
+            $(activeButton).removeClass("errored");
             $(activeButton).addClass("finished");
         } else if (status == "error") {
             // make the tab red
+            $(activeButton).removeClass("finished");
             $(activeButton).addClass("errored");
         }
     };

@@ -24,7 +24,7 @@ Arguments:
 Options:
   -h --help                  Show this screen.
 
-  -j                         switch mode from "normal" (default) to 
+  -j                         switch mode from "standalone" (default) to 
                              "jupyter-book". "jupyter-book" recursively converts
                              a folder full of already-built (by `jupyter-book
                              build`) html files into juniper-enabled html files.
@@ -117,7 +117,7 @@ def main():
         mode = "jupyter-book"
         css_base = "juniperbook"
     else:
-        mode = "normal"
+        mode = "standalone"
 
     directory = None
 
@@ -132,7 +132,7 @@ def main():
                 print(__doc__)
                 return
 
-            elif mode == "normal":
+            elif mode == "standalone":
                 
                 if os.path.isfile(arg):
                     with open(arg) as f:
@@ -202,21 +202,21 @@ def main():
         + "$(\"<a class='dropdown-buttons' onclick='juniperInit()'>"
         + "<button type='button' class='btn btn-secondary topbarbtn' title=''"
         + "data-toggle='tooltip' data-placement='left'"
-        + "data-original-title='Initialize Juniper'><i class='fas fa-bolt'></i>"
-        + "Juniper</button></a>\").appendTo(dropdown);"
+        + "data-original-title='Initialize Juniper'>"
+        + "&#x1F347 &nbsp Juniper</button></a>\").appendTo(dropdown);"
         + "});</script>"
     )
 
     head = [
-        "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>",
         f"<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/juniper.min.js'></script>",
         f"<script type='text/javascript' src='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/events.min.js'></script>",
         f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/base/{css_base}.min.css'></link>",
         f"<link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/ashtonmv/nbjuniper@{CDN_RELEASE}/cdn/themes/{theme}.min.css'></link>",
     ]
 
-    if mode == "normal":
+    if mode == "standalone":
         head.insert(0, "<script type='text/javascript' src='https://code.jquery.com/jquery-3.5.1.min.js'></script>")
+        head.insert(1, "<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>")
         head.insert(4, f"<script>$(document).ready(function() {{var juniper = new Juniper({{ {juniper_json} }}); startKernel(juniper);}});</script>",
 )
         for filename in notebooks:
@@ -259,14 +259,14 @@ def main():
             with open(filename, "w") as f:
                 write = True
                 for line in raw_lines:
-                    if "begin nbjuniper head" in line:
+                    if "<!-- begin nbjuniper head -->" in line:
                         write = False
                     if write:
                         if "</head>" in line:
                             f.write("\n".join(head))
                             f.write("\n")
                         f.write(line)
-                    if "end nbjuniper head" in line:
+                    if "<!-- end nbjuniper head -->" in line:
                         write = True
 
 
